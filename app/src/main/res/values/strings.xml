@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">OkUtils</string>
+    <string name="hide">Hide</string>
+    <string name="show">Show</string>
+    <string name="behavior">Behavior</string>
+    <string name="type">Type</string>
+
+</resources>

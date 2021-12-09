@@ -1,0 +1,3 @@
+include ':okutils'
+include ':app'
+rootProject.name = "OkUtils"
