@@ -1,6 +1,5 @@
 package com.albert.okutils.datastore;
 
-
 import androidx.datastore.preferences.core.MutablePreferences;
 import androidx.datastore.preferences.core.Preferences;
 import androidx.datastore.preferences.core.PreferencesKeys;
@@ -10,6 +9,10 @@ import androidx.datastore.rxjava2.RxDataStore;
 import com.albert.okutils.AppUtils;
 import com.albert.okutils.NullUtil;
 import com.albert.okutils.Utils;
+import com.albert.okutils.json.GsonUtils;
+import com.google.gson.Gson;
+
+import java.lang.reflect.Type;
 
 import io.reactivex.Single;
 import io.reactivex.annotations.NonNull;
@@ -37,8 +40,18 @@ public class DataStoreUtils {
         return dataStore;
     }
 
+    /**
+     * 同步获取string
+     *
+     * @param key
+     * @return
+     */
     public static String getStringValue(String key) {
-        return getStringValue(key, "");
+        if (!NullUtil.notEmpty(key)) {
+            return null;
+        }
+        Preferences.Key<String> counte = PreferencesKeys.stringKey(key);
+        return getValue(counte, null);
     }
 
     /**
@@ -50,18 +63,24 @@ public class DataStoreUtils {
      */
     public static String getStringValue(String key, String defaultValue) {
         if (!NullUtil.notEmpty(key) || defaultValue == null) {
-            return "";
+            return null;
         }
         Preferences.Key<String> counte = PreferencesKeys.stringKey(key);
         return getValue(counte, defaultValue);
     }
 
+    /**
+     * 异步 获取 string 值
+     *
+     * @param key
+     * @param callback
+     */
     public static void getStringValue(String key, DataStoreCallback<String> callback) {
-        getStringValue(key, " ", callback);
+        getStringValue(key, null, callback);
     }
 
     /**
-     * 根据Preferences 获取 string 值
+     * 异步 获取 string 值
      *
      * @param key
      * @param defaultValue
@@ -75,7 +94,7 @@ public class DataStoreUtils {
         getValue(counte, defaultValue, callback);
     }
 
-    public static boolean getBooleanValue(String key) {
+    public static Boolean getBooleanValue(String key) {
         return getBooleanValue(key, false);
     }
 
@@ -86,7 +105,7 @@ public class DataStoreUtils {
      * @param defaultValue
      * @return
      */
-    public static boolean getBooleanValue(String key, Boolean defaultValue) {
+    public static Boolean getBooleanValue(String key, Boolean defaultValue) {
         if (!NullUtil.notEmpty(key) || defaultValue == null) {
             return false;
         }
@@ -94,12 +113,18 @@ public class DataStoreUtils {
         return getValue(counte, defaultValue);
     }
 
+    /**
+     * 异步 获取 Boolean
+     *
+     * @param key
+     * @param callback
+     */
     public static void getBooleanValue(String key, DataStoreCallback<Boolean> callback) {
         getBooleanValue(key, false, callback);
     }
 
     /**
-     * 根据Preferences 获取 Boolean
+     * 异步 获取 Boolean
      *
      * @param key
      * @param defaultValue
@@ -113,8 +138,18 @@ public class DataStoreUtils {
         getValue(counte, defaultValue, callback);
     }
 
-    public static int getIntValue(String key) {
-        return getIntValue(key, -1);
+    /**
+     * 同步获取int
+     *
+     * @param key
+     * @return
+     */
+    public static Integer getIntValue(String key) {
+        if (!NullUtil.notEmpty(key)) {
+            return null;
+        }
+        Preferences.Key<Integer> counte = PreferencesKeys.intKey(key);
+        return getValue(counte, null);
     }
 
     /**
@@ -124,20 +159,26 @@ public class DataStoreUtils {
      * @param defaultValue
      * @return
      */
-    public static int getIntValue(String key, Integer defaultValue) {
+    public static Integer getIntValue(String key, Integer defaultValue) {
         if (!NullUtil.notEmpty(key) || defaultValue == null) {
-            return -1;
+            return null;
         }
         Preferences.Key<Integer> counte = PreferencesKeys.intKey(key);
         return getValue(counte, defaultValue);
     }
 
+    /**
+     * 异步 获取 int
+     *
+     * @param key
+     * @param callback
+     */
     public static void getIntValue(String key, DataStoreCallback<Integer> callback) {
         getIntValue(key, -1, callback);
     }
 
     /**
-     * 根据Preferences 获取 int
+     * 异步 获取 int
      *
      * @param key
      * @param defaultValue
@@ -151,8 +192,18 @@ public class DataStoreUtils {
         getValue(counte, defaultValue, callback);
     }
 
-    public static long getLongValue(String key) {
-        return getLongValue(key, -1L);
+    /**
+     * 同步获取 long
+     *
+     * @param key
+     * @return
+     */
+    public static Long getLongValue(String key) {
+        if (!NullUtil.notEmpty(key)) {
+            return null;
+        }
+        Preferences.Key<Long> counte = PreferencesKeys.longKey(key);
+        return getValue(counte, null);
     }
 
     /**
@@ -162,20 +213,26 @@ public class DataStoreUtils {
      * @param defaultValue
      * @return
      */
-    public static long getLongValue(String key, Long defaultValue) {
+    public static Long getLongValue(String key, Long defaultValue) {
         if (!NullUtil.notEmpty(key) || defaultValue == null) {
-            return -1L;
+            return null;
         }
         Preferences.Key<Long> counte = PreferencesKeys.longKey(key);
         return getValue(counte, defaultValue);
     }
 
+    /**
+     * 异步 获取 long
+     *
+     * @param key
+     * @param callback
+     */
     public static void getLongValue(String key, DataStoreCallback<Long> callback) {
-        getLongValue(key, -1L, callback);
+        getLongValue(key, null, callback);
     }
 
     /**
-     * 根据Preferences 获取 long
+     * 异步 获取 long
      *
      * @param key
      * @param defaultValue
@@ -189,8 +246,18 @@ public class DataStoreUtils {
         getValue(counte, defaultValue, callback);
     }
 
-    public static float getFloatValue(String key) {
-        return getFloatValue(key, -1.0f);
+    /**
+     * 同步获取float
+     *
+     * @param key
+     * @return
+     */
+    public static Float getFloatValue(String key) {
+        if (!NullUtil.notEmpty(key)) {
+            return null;
+        }
+        Preferences.Key<Float> counte = PreferencesKeys.floatKey(key);
+        return getValue(counte, null);
     }
 
     /**
@@ -200,20 +267,26 @@ public class DataStoreUtils {
      * @param defaultValue
      * @return
      */
-    public static float getFloatValue(String key, Float defaultValue) {
+    public static Float getFloatValue(String key, Float defaultValue) {
         if (!NullUtil.notEmpty(key) || defaultValue == null) {
-            return -1.0f;
+            return null;
         }
         Preferences.Key<Float> counte = PreferencesKeys.floatKey(key);
         return getValue(counte, defaultValue);
     }
 
+    /**
+     * 异步 获取 Float
+     *
+     * @param key
+     * @param callback
+     */
     public static void getFloatValue(String key, DataStoreCallback<Float> callback) {
-        getFloatValue(key, -1.0f, callback);
+        getFloatValue(key, null, callback);
     }
 
     /**
-     * 根据Preferences 获取 Float
+     * 异步 获取 Float
      *
      * @param key
      * @param defaultValue
@@ -227,8 +300,18 @@ public class DataStoreUtils {
         getValue(counte, defaultValue, callback);
     }
 
-    public static double getDoubleValue(String key) {
-        return getDoubleValue(key, -1.0);
+    /**
+     * 同步获取
+     *
+     * @param key
+     * @return
+     */
+    public static Double getDoubleValue(String key) {
+        if (!NullUtil.notEmpty(key)) {
+            return null;
+        }
+        Preferences.Key<Double> counte = PreferencesKeys.doubleKey(key);
+        return getValue(counte, null);
     }
 
     /**
@@ -238,20 +321,26 @@ public class DataStoreUtils {
      * @param defaultValue
      * @return
      */
-    public static double getDoubleValue(String key, Double defaultValue) {
+    public static Double getDoubleValue(String key, Double defaultValue) {
         if (!NullUtil.notEmpty(key) || defaultValue == null) {
-            return -1.0;
+            return null;
         }
         Preferences.Key<Double> counte = PreferencesKeys.doubleKey(key);
         return getValue(counte, defaultValue);
     }
 
+    /**
+     * 异步 获取 Double
+     *
+     * @param key
+     * @param callback
+     */
     public static void getDoubleValue(String key, DataStoreCallback<Double> callback) {
-        getDoubleValue(key, -1.0, callback);
+        getDoubleValue(key, null, callback);
     }
 
     /**
-     * 根据Preferences 获取 Double
+     * 异步 获取 Double
      *
      * @param key
      * @param defaultValue
@@ -265,53 +354,6 @@ public class DataStoreUtils {
         getValue(counte, defaultValue, callback);
     }
 
-    /**
-     * 同步获取
-     *
-     * @param counte
-     * @param defaultValue
-     * @param <T>
-     * @return
-     */
-    private static <T> T getValue(Preferences.Key<T> counte, T defaultValue) {
-        T a = getDataStore().data().blockingFirst().get(counte);
-        if (a == null) {
-            return defaultValue;
-        }
-        return a;
-    }
-
-    /**
-     * Preferences取值
-     *
-     * @param counte
-     * @param defaultValue
-     * @param callback
-     * @param <T>
-     */
-    private static <T> void getValue(Preferences.Key<T> counte, T defaultValue, DataStoreCallback<T> callback) {
-        getDataStore()
-                .data()
-                .map(new Function<Preferences, T>() {
-                    @Override
-                    public T apply(@NonNull Preferences preferences) {
-                        T value = preferences.get(counte);
-                        if (NullUtil.notEmpty(value)) {
-                            return value;
-                        } else {
-                            return defaultValue;
-                        }
-                    }
-                })
-                .subscribe(new Consumer<T>() {
-                    @Override
-                    public void accept(T s) throws Exception {
-                        if (callback != null) {
-                            callback.onValueCallback(s);
-                        }
-                    }
-                });
-    }
 
 
     /*--------------------------------------------------------------------*/
@@ -402,6 +444,60 @@ public class DataStoreUtils {
     }
 
     /**
+     * 通过 json去存储对象 非必要不推荐使用
+     *
+     * @param key
+     * @param value
+     */
+    public static void saveObject(String key, Object value) {
+        if (!NullUtil.notEmpty(key) || value == null) {
+            return;
+        }
+        String data = GsonUtils.getGson().toJson(value);
+        Preferences.Key<String> counte = PreferencesKeys.stringKey(key);
+        save(counte, data);
+    }
+
+    /**
+     * 通过json获取对象，非必要不推荐使用
+     *
+     * @param key
+     * @param classOfT
+     * @param <T>
+     * @return
+     */
+    public static <T> T getObject(String key, Class<T> classOfT) {
+        if (!NullUtil.notEmpty(key)) {
+            return null;
+        }
+        String data = getStringValue(key);
+        if (!NullUtil.notEmpty(data)) {
+            return null;
+        }
+        return GsonUtils.getGson().fromJson(data, classOfT);
+    }
+
+    /**
+     * 通过json获取对象,非必要不推荐使用
+     *
+     * @param key
+     * @param obj
+     * @param <T>
+     * @return
+     */
+    public static <T> T getObject(String key, Type obj) {
+        if (!NullUtil.notEmpty(key)) {
+            return null;
+        }
+        String base64 = getStringValue(key);
+        if (NullUtil.notEmpty(base64)) {
+            return new Gson().fromJson(base64, obj);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * DataStore 的 Preferences 统一写入
      *
      * @param counte
@@ -422,6 +518,65 @@ public class DataStoreUtils {
     }
 
     /**
+     * 同步获取
+     *
+     * @param counte
+     * @param defaultValue
+     * @param <T>
+     * @return
+     */
+    private static <T> T getValue(Preferences.Key<T> counte, T defaultValue) {
+        T a = getDataStore().data().blockingFirst().get(counte);
+        if (a == null) {
+            return defaultValue;
+        }
+        return a;
+    }
+
+    /**
+     * 异步 Preferences取值
+     *
+     * @param counte
+     * @param defaultValue
+     * @param callback
+     * @param <T>
+     */
+    private static <T> void getValue(Preferences.Key<T> counte, T defaultValue, DataStoreCallback<T> callback) {
+        getDataStore()
+                .data()
+                .map(new Function<Preferences, T>() {
+                    @Override
+                    public T apply(@NonNull Preferences preferences) {
+                        T value = preferences.get(counte);
+                        if (NullUtil.notEmpty(value)) {
+                            return value;
+                        } else {
+                            return defaultValue;
+                        }
+                    }
+                })
+                .subscribe(new Consumer<T>() {
+                    @Override
+                    public void accept(T s) throws Exception {
+                        if (callback != null) {
+                            callback.onValueCallback(s);
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 删除
+     *
+     * @param key
+     * @param <T>
+     */
+    public static <T> void clear(String key) {
+        Preferences.Key<String> counte = PreferencesKeys.stringKey(key);
+        clear(counte);
+    }
+
+    /**
      * 删除
      *
      * @param counte
@@ -439,5 +594,23 @@ public class DataStoreUtils {
                 });
     }
 
+    /**
+     * 清楚所有
+     */
+    public static void clearAll() {
+        getDataStore()
+                .updateDataAsync(new Function<Preferences, Single<Preferences>>() {
+                    @Override
+                    public Single<Preferences> apply(@NonNull Preferences preferences) {
+                        MutablePreferences mutablePreferences = preferences.toMutablePreferences();
+                        mutablePreferences.clear();
+                        return Single.just(mutablePreferences);
+                    }
+                });
+    }
 
+    //
+    // MutablePreferences : 获取 Preferences 的可变副本，其中包含此 Preferences 中的所有首选项。
+    // 这可用于更新您的首选项，而无需在 DataStore.updateData 中从头开始构建新的 Preferences 对象
+    //
 }

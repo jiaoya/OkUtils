@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.albert.okutils">
 
+
     <application>
         <activity
             android:name=".UtilsTransActivity"
@@ -22,5 +23,5 @@
 
 
     </application>
-    
+
 </manifest>

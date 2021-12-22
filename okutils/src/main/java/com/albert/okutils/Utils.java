@@ -52,17 +52,6 @@ public class Utils {
         throw new NullPointerException("u should init first");
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // interface
-    ///////////////////////////////////////////////////////////////////////////
-
-    public interface OnAppStatusChangedListener {
-        void onForeground();
-
-        void onBackground();
-    }
-
-
     public interface Consumer<T> {
         void accept(T t);
     }
